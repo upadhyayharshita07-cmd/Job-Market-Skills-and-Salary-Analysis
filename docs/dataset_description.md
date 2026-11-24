@@ -19,8 +19,20 @@ The project analyzes the primary dataset file: `naukri_data_science_jobs_india.c
 | `Job_Role` | String | Advertised job title | `"Data Scientist"`, `"Lead Data Engineer"`, `"Senior ML Specialist"` | Unicode NFC normalization, trimming, keyword-based role family mapping into 18 categories. |
 | `Company` | String | Hiring organization name | `"Accenture"`, `"Amazon"`, `"Tata Consultancy Services"`, `"Cognizant"` | Trimming, whitespace deduplication, case-insensitive indexation. |
 | `Location` | String | Geographical work location(s) | `"Bangalore/Bengaluru"`, `"Hyderabad/Secunderabad"`, `"Pune(Hinjewadi)"` | Splitting comma-separated multi-cities; alias mapping (e.g., Bangalore → Bengaluru); region clustering (Delhi NCR). |
-| `Job Experience` | String | Required experience range | `"3-8 Yrs"`, `"0-2 Yrs"`, `"5-10 Yrs"` | Regex extraction of lower/upper bounds (`(\d+)\s*-\s*(\d+)`); average calculations. |
+| `Job Experience` | String | Required experience range | `"3-8"`, `"0-2"`, `"5-10"` | Lower and upper bounds are parsed separately for the experience averages. |
 | `Skills/Description` | String | Required technical skills & requirements | `"Python, SQL, AWS, Tableau, Machine Learning"` | Comma separation, lowercase normalization, alias grouping (e.g., `"py"` → `"Python"`), noise exclusion (`"skills"`). |
+
+### Experience ranges and averages
+
+The experience summary accepts two whole numbers separated by a hyphen, such as `3-8`. It also accepts an optional case-insensitive year suffix (`yr`, `yrs`, `year`, or `years`), surrounding whitespace, and an optional final period. Examples include `3-8 Yrs`, `0-2 years`, and `5 - 10 yr.`.
+
+Blank entries, reversed ranges such as `8-3`, single values, open-ended ranges such as `3+`, decimals, and other malformed entries are excluded. The dashboard reports the count of valid records and computes separate arithmetic means for their lower and upper bounds, rounded to two decimal places. When no valid ranges remain, both averages are `null`.
+
+After installing the project requirements, run the regression tests from the repository root:
+
+```sh
+python -m unittest discover -s tests -v
+```
 
 ---
 

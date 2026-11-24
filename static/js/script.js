@@ -103,7 +103,13 @@ function renderJobs(jobs) {
     source.textContent = titles ? `Original listing title${job.source_titles.length > 1 ? "s" : ""}: ${titles}` : "";
     const meta = document.createElement("p");
     meta.className = "job-meta";
-    meta.textContent = `${job.Company || "Company not specified"} · ${job.Clean_Location || job.Location || "Location not specified"} · ${job["Job Experience"] || "Experience not specified"} years`;
+    const experience = job["Job Experience"]?.trim();
+    const experienceLabel = experience
+      ? (/^\d+\s*-\s*\d+\.?$/.test(experience)
+        ? `${experience.replace(/\.$/, "")} years`
+        : experience)
+      : "Experience not specified";
+    meta.textContent = `${job.Company || "Company not specified"} · ${job.Clean_Location || job.Location || "Location not specified"} · ${experienceLabel}`;
     const skills = document.createElement("p");
     skills.className = "job-skills";
     skills.textContent = job["Skills/Description"] || "No skills description provided.";
