@@ -180,7 +180,13 @@ def extract_skills(df, limit=15):
 def extract_experience(df):
     ranges = []
     for value in df["Job Experience"]:
-        match = re.fullmatch(r"(\d+)\s*-\s*(\d+)", value)
+        if not isinstance(value, str):
+            continue
+        match = re.fullmatch(
+            r"(\d+)\s*-\s*(\d+)\s*(?:yrs?|years?)?\.?",
+            value.strip(),
+            flags=re.IGNORECASE,
+        )
         if match:
             low, high = map(int, match.groups())
             if low <= high:
